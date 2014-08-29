@@ -20,12 +20,15 @@
 include_recipe 'hadoop::repo'
 include_recipe 'hadoop::zookeeper_checkconfig'
 
-# HDP 2.0 zookeeper package doesn't create zookeeper user/group, creates hadoop, instead
-group 'zookeeper' do
-  action :create
-end
+# HDP 2.0 zookeeper package doesn't create zookeeper user/group, expects hadoop group
 user 'zookeeper' do
   action :create
+end
+
+%w(zookeeper hadoop).each do |g|
+  group g do
+    action :create
+  end
 end
 
 package 'zookeeper' do
